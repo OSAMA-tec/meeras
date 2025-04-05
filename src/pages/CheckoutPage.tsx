@@ -4,6 +4,70 @@ import { motion } from 'framer-motion';
 import { useCart } from '../context/CartContext';
 import toast from 'react-hot-toast';
 import { Check, CreditCard, DollarSign, Truck, ShoppingBag } from 'lucide-react';
+import { v4 as uuidv4 } from 'uuid'; // Import for generating random IDs
+
+// Order service for API calls
+interface OrderItem {
+  productId: string;
+  title: string;
+  image: string;
+  price: number;
+  quantity: number;
+}
+
+interface AddressInfo {
+  addressId: string;
+  address: string;
+  city: string;
+  pincode: string;
+  phone: string;
+  notes: string;
+}
+
+interface OrderData {
+  userId: string;
+  cartId: string;
+  cartItems: OrderItem[];
+  addressInfo: AddressInfo;
+}
+
+interface OrderResponse {
+  success: boolean;
+  message?: string;
+  data?: {
+    orderId: string;
+    status: string;
+    totalAmount: number;
+    createdAt: string;
+    items: OrderItem[];
+    addressInfo: AddressInfo;
+  };
+}
+
+const orderService = {
+  createOrder: async (orderData: OrderData): Promise<OrderResponse> => {
+    try {
+      const response = await fetch('https://server-28aj.onrender.com/api/shop/order/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData),
+      });
+      
+      const data = await response.json();
+      
+      if (!data.success) {
+        throw new Error(data.message || 'Failed to create order');
+      }
+      
+      return data;
+    } catch (error) {
+      console.error('Order creation error:', error);
+      throw error;
+    }
+  }
+};
 
 interface FormData {
   // User details
@@ -30,6 +94,9 @@ interface FormData {
   
   // Options
   sameAsBilling: boolean;
+  
+  // Additional notes
+  notes: string;
 }
 
 // Step indicators component
@@ -91,12 +158,14 @@ const CheckoutPage: React.FC = () => {
     
     paymentMethod: 'cod',
     sameAsBilling: true,
+    
+    notes: '',
   });
   
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Handling form field changes
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target as HTMLInputElement;
     const checked = type === 'checkbox' ? (e.target as HTMLInputElement).checked : undefined;
     
@@ -136,14 +205,43 @@ const CheckoutPage: React.FC = () => {
     setIsSubmitting(true);
     
     try {
-      // Here you would typically send the order to your backend
-      // For demo purposes, we'll just simulate a successful order
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Generate random IDs as requested
+      const userId = uuidv4().replace(/-/g, '').substring(0, 24);
+      const cartId = uuidv4().replace(/-/g, '').substring(0, 24);
+      const addressId = uuidv4().replace(/-/g, '').substring(0, 24);
+      
+      // Format cart items for API
+      const cartItems = state.items.map(item => ({
+        productId: item.id.toString(), // Convert to string for API
+        title: item.name,
+        image: item.image,
+        price: item.price,
+        quantity: item.quantity
+      }));
+      
+      // Create order data structure
+      const orderData: OrderData = {
+        userId,
+        cartId,
+        cartItems,
+        addressInfo: {
+          addressId,
+          address: formData.shippingAddress,
+          city: formData.shippingCity,
+          pincode: formData.shippingZip,
+          phone: formData.phone,
+          notes: formData.notes
+        }
+      };
+      
+      // Call the API
+      await orderService.createOrder(orderData);
       
       toast.success('Order placed successfully!');
       clearCart();
       navigate('/');
-    } catch {
+    } catch (error) {
+      console.error('Order submission error:', error);
       toast.error('Failed to place order. Please try again.');
     } finally {
       setIsSubmitting(false);
@@ -331,7 +429,19 @@ const CheckoutPage: React.FC = () => {
                       <option value="UK">United Kingdom</option>
                       <option value="AU">Australia</option>
                       <option value="NZ">New Zealand</option>
+                      <option value="IN">India</option>
                     </select>
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium mb-2 dark:text-gray-200">Delivery Notes (Optional)</label>
+                    <textarea
+                      name="notes"
+                      value={formData.notes}
+                      onChange={handleChange}
+                      placeholder="Leave instructions for delivery (e.g., gate code, delivery preferences)"
+                      rows={3}
+                      className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-orange focus:border-transparent dark:bg-gray-700 dark:text-white transition-all duration-200"
+                    ></textarea>
                   </div>
                 </div>
               </motion.section>
@@ -430,6 +540,7 @@ const CheckoutPage: React.FC = () => {
                         <option value="UK">United Kingdom</option>
                         <option value="AU">Australia</option>
                         <option value="NZ">New Zealand</option>
+                        <option value="IN">India</option>
                       </select>
                     </div>
                   </div>
