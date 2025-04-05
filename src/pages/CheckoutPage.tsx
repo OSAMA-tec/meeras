@@ -264,7 +264,7 @@ const CheckoutPage: React.FC = () => {
         >
           <ShoppingBag className="w-20 h-20 mx-auto text-gray-300 dark:text-gray-600 mb-6" />
           <h1 className="text-3xl font-display font-bold mb-4 dark:text-white">Your Cart is Empty</h1>
-          <p className="text-gray-600 dark:text-gray-300 mb-8 max-w-md mx-auto">There are no items in your cart to checkout. Explore our shop to discover handcrafted artisanal products.</p>
+          <p className="text-gray-600 dark:text-gray-300 mb-8 max-w-md mx-auto">There are no items in your cart to checkout. Explore our shop to discover handcrafted Meeras products.</p>
           <motion.button 
             onClick={() => navigate('/shop')} 
             className="px-8 py-3 bg-primary-orange hover:bg-primary-bright-orange text-white rounded-full transition-colors shadow-md text-lg"

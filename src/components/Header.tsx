@@ -44,7 +44,7 @@ export default function Header() {
               >
                 <img 
                   src={theme === 'dark' ? LogoOrange : LogoWhite}
-                  alt="Artisanal Logo"
+                  alt="Meeras Logo"
                   className="h-full w-auto object-contain"
                 />
               </motion.div>

@@ -13,7 +13,7 @@ const Footer = () => {
             <div className="h-24 w-auto">
               <img 
                 src={LogoDark} 
-                alt="Artisanal Logo" 
+                alt="Meeras Logo" 
                 className="h-full w-auto object-contain"
               />
             </div>
@@ -40,7 +40,7 @@ const Footer = () => {
               <li>123 Craft Street</li>
               <li>Artisan City, AC 12345</li>
               <li>Phone: (555) 123-4567</li>
-              <li>Email: info@artisanal.com</li>
+              <li>Email: info@Meeras.com</li>
             </ul>
           </div>
 
@@ -68,7 +68,7 @@ const Footer = () => {
         <div className="mt-8 pt-8 border-t border-gray-800">
           <div className="flex justify-between items-center">
             <p className="text-sm text-gray-400">
-              © {new Date().getFullYear()} Artisanal. All rights reserved.
+              © {new Date().getFullYear()} Meeras. All rights reserved.
             </p>
             <div className="flex space-x-4">
               <motion.a
