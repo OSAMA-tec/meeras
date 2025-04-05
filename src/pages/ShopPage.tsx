@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Search, Filter, X, ChevronDown, Grid, List } from 'lucide-react';
-import { useTheme } from '../context/ThemeContext';
 import { useCart } from '../context/CartContext';
 
 // Define product interface
@@ -147,33 +146,35 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
   return (
     <motion.div
-      whileHover={{ y: -5 }}
-      className="bg-white dark:bg-primary-soft-black rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow"
+      whileHover={{ y: -5, boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}
+      className="backdrop-blur-sm bg-white/80 dark:bg-primary-soft-black/70 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-800"
     >
       <div className="relative h-48 overflow-hidden">
         <img
           src="https://placehold.co/600x400/png" // Placeholder, replace with actual images in production
           alt={product.name}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
         />
         {!product.inStock && (
-          <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
-            <span className="text-white font-medium">Out of Stock</span>
+          <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center backdrop-blur-sm">
+            <span className="text-white font-medium px-3 py-1 bg-red-500/70 rounded-full">Out of Stock</span>
           </div>
         )}
+        <div className="absolute top-2 right-2">
+          <span className="bg-primary-orange/90 text-white text-xs px-2 py-1 rounded-full font-medium">
+            ${product.price.toFixed(2)}
+          </span>
+        </div>
       </div>
       
-      <div className="p-4">
-        <div className="flex justify-between items-start">
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white">{product.name}</h3>
-          <span className="font-semibold text-primary-orange">${product.price.toFixed(2)}</span>
-        </div>
+      <div className="p-5">
+        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">{product.name}</h3>
         
-        <p className="mt-2 text-gray-600 dark:text-gray-300 text-sm line-clamp-2">
+        <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-2 mb-4">
           {product.description}
         </p>
         
-        <div className="mt-4 flex justify-between items-center">
+        <div className="flex justify-between items-center">
           <div className="flex items-center">
             <div className="flex items-center">
               {[...Array(5)].map((_, i) => (
@@ -201,9 +202,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
           <button
             onClick={onAddToCart}
             disabled={!product.inStock}
-            className={`py-1.5 px-3 rounded text-sm font-medium transition-colors ${
+            className={`py-2 px-4 rounded-full text-sm font-medium transition-all duration-300 ${
               product.inStock
-                ? 'bg-primary-orange hover:bg-primary-bright-orange text-white'
+                ? 'bg-primary-orange hover:bg-primary-bright-orange text-white shadow-md hover:shadow-lg transform hover:scale-105'
                 : 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed'
             }`}
           >
@@ -224,74 +225,79 @@ interface ProductListItemProps {
 const ProductListItem: React.FC<ProductListItemProps> = ({ product, onAddToCart }) => {
   return (
     <motion.div
-      whileHover={{ y: -2 }}
-      className="bg-white dark:bg-primary-soft-black rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow flex"
+      whileHover={{ y: -2, boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)' }}
+      className="backdrop-blur-sm bg-white/80 dark:bg-primary-soft-black/70 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-gray-800 flex"
     >
       <div className="w-1/4 relative">
         <img
           src="https://placehold.co/600x400/png" // Placeholder, replace with actual images in production
           alt={product.name}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
         />
         {!product.inStock && (
-          <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
-            <span className="text-white font-medium">Out of Stock</span>
+          <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center backdrop-blur-sm">
+            <span className="text-white font-medium px-3 py-1 bg-red-500/70 rounded-full">Out of Stock</span>
           </div>
         )}
+        <div className="absolute top-2 right-2">
+          <span className="bg-primary-orange/90 text-white text-xs px-2 py-1 rounded-full font-medium shadow-sm">
+            ${product.price.toFixed(2)}
+          </span>
+        </div>
       </div>
       
-      <div className="p-4 flex-1">
+      <div className="p-5 flex-1">
         <div className="flex justify-between items-start">
           <div>
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white">{product.name}</h3>
-            <p className="mt-2 text-gray-600 dark:text-gray-300">
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">{product.name}</h3>
+            <p className="text-gray-600 dark:text-gray-300 mb-3">
               {product.description}
             </p>
+            <div className="flex items-center mb-3">
+              <div className="flex items-center">
+                {[...Array(5)].map((_, i) => (
+                  <svg
+                    key={i}
+                    className={`w-4 h-4 ${
+                      i < Math.floor(product.rating)
+                        ? 'text-yellow-400'
+                        : i < product.rating
+                        ? 'text-yellow-400'
+                        : 'text-gray-300 dark:text-gray-600'
+                    }`}
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+              </div>
+              <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">
+                ({product.reviews})
+              </span>
+            </div>
           </div>
-          <span className="font-semibold text-xl text-primary-orange">${product.price.toFixed(2)}</span>
         </div>
         
-        <div className="mt-4 flex justify-between items-center">
-          <div className="flex items-center">
-            <div className="flex items-center">
-              {[...Array(5)].map((_, i) => (
-                <svg
-                  key={i}
-                  className={`w-4 h-4 ${
-                    i < Math.floor(product.rating)
-                      ? 'text-yellow-400'
-                      : i < product.rating
-                      ? 'text-yellow-400'
-                      : 'text-gray-300 dark:text-gray-600'
-                  }`}
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-              ))}
-            </div>
-            <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">
-              ({product.reviews})
-            </span>
+        <div className="flex justify-between items-center mt-4">
+          <div className="text-sm inline-flex items-center px-2.5 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200">
+            {product.inStock ? 
+              <span className="flex items-center"><span className="w-2 h-2 bg-green-500 rounded-full mr-1.5"></span>In Stock</span> : 
+              <span className="flex items-center"><span className="w-2 h-2 bg-red-500 rounded-full mr-1.5"></span>Out of Stock</span>
+            }
           </div>
           
-          <div className="flex items-center gap-3">
-            <div className="text-sm text-gray-500 dark:text-gray-400">
-              {product.inStock ? 'In Stock' : 'Out of Stock'}
-            </div>
-            <button
-              onClick={onAddToCart}
-              disabled={!product.inStock}
-              className={`py-2 px-4 rounded text-sm font-medium transition-colors ${
-                product.inStock
-                  ? 'bg-primary-orange hover:bg-primary-bright-orange text-white'
-                  : 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed'
-              }`}
-            >
-              {product.inStock ? 'Add to Cart' : 'Out of Stock'}
-            </button>
-          </div>
+          <button
+            onClick={onAddToCart}
+            disabled={!product.inStock}
+            className={`py-2 px-6 rounded-full text-sm font-medium transition-all duration-300 shadow ${
+              product.inStock
+                ? 'bg-primary-orange hover:bg-primary-bright-orange text-white hover:shadow-lg transform hover:scale-105'
+                : 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed'
+            }`}
+          >
+            {product.inStock ? 'Add to Cart' : 'Out of Stock'}
+          </button>
         </div>
       </div>
     </motion.div>

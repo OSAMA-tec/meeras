@@ -6,6 +6,7 @@ import Header from './components/Header';
 import Hero from './components/Hero';
 import ProductGrid from './components/ProductGrid';
 import ShopPage from './pages/ShopPage';
+import CheckoutPage from './pages/CheckoutPage';
 import Footer from './components/Footer';
 import { ThemeProvider } from './context/ThemeContext';
 import { CartProvider } from './context/CartContext';
@@ -27,6 +28,7 @@ function App() {
                   </main>
                 } />
                 <Route path="/shop" element={<ShopPage />} />
+                <Route path="/checkout" element={<CheckoutPage />} />
               </Routes>
               <Footer />
             </div>

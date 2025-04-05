@@ -1,7 +1,8 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Plus, Minus, Trash2 } from 'lucide-react';
+import { X, Plus, Minus, Trash2, ShoppingBag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { Link } from 'react-router-dom';
 
 interface CartProps {
   isOpen: boolean;
@@ -41,8 +42,16 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
               </div>
 
               {state.items.length === 0 ? (
-                <div className="flex-1 flex items-center justify-center">
-                  <p className="text-gray-500 dark:text-gray-400">Your cart is empty</p>
+                <div className="flex-1 flex flex-col items-center justify-center p-6">
+                  <ShoppingBag className="w-16 h-16 text-gray-300 dark:text-gray-600 mb-4" />
+                  <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">Your cart is empty</p>
+                  <p className="text-gray-400 dark:text-gray-500 text-sm text-center mb-6">Looks like you haven't added any products to your cart yet.</p>
+                  <button
+                    onClick={onClose}
+                    className="px-6 py-3 bg-primary-orange hover:bg-primary-bright-orange text-white rounded-full transition-colors shadow-md"
+                  >
+                    Continue Shopping
+                  </button>
                 </div>
               ) : (
                 <>
@@ -91,27 +100,35 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
                   </div>
 
                   <div className="border-t dark:border-gray-700 p-4">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-gray-600 dark:text-gray-300">Subtotal</span>
+                      <span className="font-medium dark:text-white">
+                        ${state.total.toFixed(2)}
+                      </span>
+                    </div>
                     <div className="flex justify-between items-center mb-4">
-                      <span className="text-lg font-semibold dark:text-white">Total:</span>
+                      <span className="text-gray-600 dark:text-gray-300">Shipping</span>
+                      <span className="font-medium dark:text-white">Calculated at checkout</span>
+                    </div>
+                    <div className="flex justify-between items-center mb-6 pb-4 border-b dark:border-gray-700">
+                      <span className="text-lg font-semibold dark:text-white">Total</span>
                       <span className="text-lg font-semibold text-primary-orange">
                         ${state.total.toFixed(2)}
                       </span>
                     </div>
-                    <div className="flex gap-4">
+                    <div className="flex flex-col gap-3">
+                      <Link
+                        to="/checkout"
+                        onClick={onClose}
+                        className="w-full px-4 py-3 bg-primary-orange hover:bg-primary-bright-orange text-white rounded-full transition-colors text-center font-medium shadow-md"
+                      >
+                        Proceed to Checkout
+                      </Link>
                       <button
                         onClick={clearCart}
-                        className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors dark:text-white"
+                        className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors dark:text-white text-center font-medium"
                       >
                         Clear Cart
-                      </button>
-                      <button
-                        onClick={() => {
-                          // Implement checkout logic
-                          alert('Checkout functionality coming soon!');
-                        }}
-                        className="flex-1 px-4 py-2 bg-primary-orange hover:bg-primary-bright-orange text-white rounded-md transition-colors"
-                      >
-                        Checkout
                       </button>
                     </div>
                   </div>
