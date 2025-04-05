@@ -5,8 +5,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { useCart } from '../context/CartContext';
 import Cart from './Cart';
-import LogoWhite from '../assets/logo-white-removebg.png';
-import LogoOrange from '../assets/logo-orange-removebg.png';
+import MainLogo from '../assets/Main.svg';
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -31,21 +30,20 @@ export default function Header() {
 
   return (
     <>
-      <header className={`fixed w-full z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-white/80 dark:bg-primary-warm-gray/80 backdrop-blur-sm shadow-md' : 'bg-transparent'
-      }`}>
+      <header className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white/80 dark:bg-primary-warm-gray/80 backdrop-blur-sm shadow-md' : 'bg-transparent'
+        }`}>
         <nav className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link to="/">
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="h-12 w-auto"
+                className="h-16 w-auto"
               >
-                <img 
-                  src={theme === 'dark' ? LogoOrange : LogoWhite}
+                <img
+                  src={MainLogo}
                   alt="Meeras Logo"
-                  className="h-full w-auto object-contain"
+                  className="h-full w-auto object-contain transition-all duration-300"
                 />
               </motion.div>
             </Link>
@@ -97,7 +95,7 @@ function NavLinks({ mobile = false }: { mobile?: boolean }) {
   const baseClasses = "text-black dark:text-white hover:text-primary-orange dark:hover:text-primary-orange transition-colors duration-300";
   const activeClasses = "text-primary-orange dark:text-primary-orange";
   const classes = mobile ? `${baseClasses} block py-2 text-center` : baseClasses;
-  
+
   const getClasses = (path: string) => {
     return `${classes} ${location.pathname === path ? activeClasses : ''}`;
   };
